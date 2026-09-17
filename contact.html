@@ -283,9 +283,7 @@
       <p class="section-label">Send a Message</p>
       <h2>Drop Me a Note</h2>
 
-      <div id="form-success">[ Message Received ] &mdash; I will get back to you soon.</div>
-
-      <form id="contact-form" onsubmit="handleSubmit(event)">
+      <form id="contact-form" action="mailto:sbukhari.bese24seecs@seecs.edu.pk" method="post" enctype="text/plain">
 
         <div class="form-row">
           <div class="form-group">
@@ -326,16 +324,6 @@
   <footer id="site-footer">
     <p>© 2026 &nbsp;<span>Syed Abdul Momin Bukhari</span> &nbsp;·&nbsp; Reg. No. 501993 &nbsp;·&nbsp; SE 15 A</p>
   </footer>
-
-  <script>
-    function handleSubmit(e) {
-      e.preventDefault();
-      var form    = document.getElementById('contact-form');
-      var success = document.getElementById('form-success');
-      form.style.display    = 'none';
-      success.style.display = 'block';
-    }
-  </script>
 
 </body>
 </html>

@@ -35,7 +35,7 @@
       content: '';
       position: fixed; inset: 0;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none; z-index: 999;
+      pointer-events: none; z-index: 998;
     }
 
     /* ── Nav ── */
@@ -81,40 +81,34 @@
       padding: 0 2rem;
     }
 
-    /* ── Category filter buttons ── */
-    .filter-bar {
-      display: flex; gap: 0.5rem; flex-wrap: wrap;
-      margin-bottom: 2rem;
+    /* ── Divider ── */
+    .divider {
+      display: flex; align-items: center; gap: 1rem;
+      color: var(--muted); font-size: 0.75rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      margin-bottom: 1.5rem;
     }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-    .filter-btn {
-      font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.1em;
-      text-transform: uppercase; padding: 0.4rem 1rem;
-      border: 1.5px solid var(--border);
-      background: var(--paper); color: var(--muted);
-      cursor: pointer; transition: all 0.2s;
-    }
-
-    .filter-btn:hover, .filter-btn.active {
-      background: var(--amber); border-color: var(--amber); color: var(--cream);
-    }
-
-    /* ── Masonry-style grid ── */
+    /* ── Gallery grid ── */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1rem;
     }
 
-    /* Make some cards span 2 columns for variety */
+    /* Wide cards */
     .gallery-item:nth-child(1) { grid-column: span 2; }
     .gallery-item:nth-child(5) { grid-column: span 2; }
 
+    /* Each item is an <a> tag */
     .gallery-item {
       background: var(--paper);
       border: 1px solid var(--border);
       overflow: hidden;
-      cursor: pointer;
+      display: block;
+      text-decoration: none;
+      color: var(--ink);
       position: relative;
       transition: border-color 0.25s;
     }
@@ -135,33 +129,6 @@
       transform: scale(1.03);
     }
 
-    /* Placeholder when image missing */
-    .gallery-item .img-placeholder {
-      width: 100%;
-      height: 260px;
-      background: var(--paper);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      color: var(--muted);
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .gallery-item .img-placeholder .ph-label {
-      font-family: var(--serif);
-      font-size: 0.9rem;
-      letter-spacing: 0.15em;
-      color: var(--muted);
-    }
-
-    .gallery-item:nth-child(1) .img-placeholder,
-    .gallery-item:nth-child(5) .img-placeholder { height: 260px; }
-
     .gallery-caption {
       padding: 0.75rem 1rem;
       display: flex; justify-content: space-between; align-items: baseline;
@@ -174,48 +141,52 @@
 
     .gallery-caption .cap-tag {
       font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--amber); white-space: nowrap;
+      color: var(--amber); white-space: nowrap; font-family: var(--mono);
     }
 
-    /* ── Lightbox overlay ── */
-    #lightbox {
+    /* ── CSS-only Lightbox ── */
+    .lightbox {
       display: none;
       position: fixed; inset: 0; z-index: 1000;
-      background: rgba(44,36,22,0.92);
+      background: rgba(44,36,22,0.93);
       align-items: center; justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
     }
 
-    #lightbox.open { display: flex; }
+    /* Show when targeted via URL hash */
+    .lightbox:target { display: flex; }
 
-    #lightbox img {
-      max-width: 80vw; max-height: 80vh;
-      border: 3px solid var(--amber);
-      object-fit: contain;
+    /* Invisible full-screen backdrop link — clicking it closes the lightbox */
+    .lightbox-bg {
+      position: absolute; inset: 0;
+      display: block;
     }
 
-    #lightbox-close {
+    .lightbox-close {
       position: absolute; top: 1.5rem; right: 2rem;
-      font-size: 2rem; color: var(--cream); cursor: pointer;
-      background: none; border: none; font-family: var(--serif);
+      font-size: 2rem; color: var(--cream);
+      text-decoration: none; font-family: var(--serif);
+      line-height: 1; z-index: 2;
       transition: color 0.2s;
     }
 
-    #lightbox-close:hover { color: var(--amber); }
+    .lightbox-close:hover { color: var(--amber); }
 
-    #lightbox-caption {
-      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
-      color: var(--cream); font-size: 0.88rem; letter-spacing: 0.1em;
-      font-style: italic; opacity: 0.8;
+    .lightbox img {
+      max-width: 80vw; max-height: 75vh;
+      border: 3px solid var(--amber);
+      object-fit: contain;
+      position: relative; z-index: 2;
+      display: block;
     }
 
-    /* ── Divider ── */
-    .divider {
-      display: flex; align-items: center; gap: 1rem;
-      color: var(--muted); font-size: 0.75rem;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      margin-bottom: 1.5rem;
+    .lightbox-cap {
+      font-family: var(--serif);
+      color: var(--cream); font-size: 0.95rem;
+      font-style: italic; opacity: 0.85;
+      position: relative; z-index: 2;
     }
-    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
     /* ── Footer ── */
     footer {
@@ -257,161 +228,129 @@
 
     <div class="divider" id="gallery-divider">All Photos</div>
 
-    <!-- Filter bar -->
-    <div class="filter-bar" id="filter-bar">
-      <button class="filter-btn active" id="filter-all" onclick="filterGallery('all', this)">All</button>
-      <button class="filter-btn" id="filter-sports" onclick="filterGallery('sports', this)">Sports</button>
-      <button class="filter-btn" id="filter-campus" onclick="filterGallery('campus', this)">Campus</button>
-      <button class="filter-btn" id="filter-personal" onclick="filterGallery('personal', this)">Personal</button>
-    </div>
-
-    <!-- Gallery grid -->
     <div class="gallery-grid" id="gallery-grid">
 
       <!-- Image 1 (spans 2 cols) -->
-      <div class="gallery-item" id="gitem-1" data-category="sports" onclick="openLightbox('images/tennis.jpg', 'Tennis Match — Campus Courts')">
-        <img src="images/tennis.jpg" alt="Tennis match on campus courts"
-             onerror="this.style.display='none'; document.getElementById('ph-1').style.display='flex';">
-        <div class="img-placeholder" id="ph-1" style="display:none;">
-          <span class="ph-label">[ tennis.jpg ]</span>
-        </div>
+      <a class="gallery-item" href="#lb-1" id="gitem-1">
+        <img src="https://loremflickr.com/800/500/tennis,sport" alt="A tennis match on campus courts">
         <div class="gallery-caption">
           <span class="cap-title">Campus Tennis Match</span>
           <span class="cap-tag">Sports</span>
         </div>
-      </div>
+      </a>
 
       <!-- Image 2 -->
-      <div class="gallery-item" id="gitem-2" data-category="sports" onclick="openLightbox('images/cricket.jpg', 'Cricket Practice Session')">
-        <img src="images/cricket.jpg" alt="Cricket practice"
-             onerror="this.style.display='none'; document.getElementById('ph-2').style.display='flex';">
-        <div class="img-placeholder" id="ph-2" style="display:none;">
-          <span class="ph-label">[ cricket.jpg ]</span>
-        </div>
+      <a class="gallery-item" href="#lb-2" id="gitem-2">
+        <img src="https://loremflickr.com/600/400/cricket,sport" alt="Cricket practice session on the field">
         <div class="gallery-caption">
           <span class="cap-title">Cricket Practice</span>
           <span class="cap-tag">Sports</span>
         </div>
-      </div>
+      </a>
 
       <!-- Image 3 -->
-      <div class="gallery-item" id="gitem-3" data-category="sports" onclick="openLightbox('images/table_tennis.jpg', 'Table Tennis Tournament')">
-        <img src="images/table_tennis.jpg" alt="Table tennis tournament"
-             onerror="this.style.display='none'; document.getElementById('ph-3').style.display='flex';">
-        <div class="img-placeholder" id="ph-3" style="display:none;">
-          <span class="ph-label">[ table_tennis.jpg ]</span>
-        </div>
+      <a class="gallery-item" href="#lb-3" id="gitem-3">
+        <img src="https://loremflickr.com/600/400/tabletennis,pingpong" alt="Table tennis tournament in progress">
         <div class="gallery-caption">
           <span class="cap-title">Table Tennis Tournament</span>
           <span class="cap-tag">Sports</span>
         </div>
-      </div>
+      </a>
 
       <!-- Image 4 -->
-      <div class="gallery-item" id="gitem-4" data-category="campus" onclick="openLightbox('images/campus.jpg', 'University Campus')">
-        <img src="images/campus.jpg" alt="University campus"
-             onerror="this.style.display='none'; document.getElementById('ph-4').style.display='flex';">
-        <div class="img-placeholder" id="ph-4" style="display:none;">
-          <span class="ph-label">[ campus.jpg ]</span>
-        </div>
+      <a class="gallery-item" href="#lb-4" id="gitem-4">
+        <img src="https://loremflickr.com/600/400/university,campus" alt="University campus building and grounds">
         <div class="gallery-caption">
           <span class="cap-title">University Campus</span>
           <span class="cap-tag">Campus</span>
         </div>
-      </div>
+      </a>
 
       <!-- Image 5 (spans 2 cols) -->
-      <div class="gallery-item" id="gitem-5" data-category="personal" onclick="openLightbox('images/coding_setup.jpg', 'My Coding Setup')">
-        <img src="images/coding_setup.jpg" alt="Coding setup"
-             onerror="this.style.display='none'; document.getElementById('ph-5').style.display='flex';">
-        <div class="img-placeholder" id="ph-5" style="display:none;">
-          <span class="ph-label">[ coding_setup.jpg ]</span>
-        </div>
+      <a class="gallery-item" href="#lb-5" id="gitem-5">
+        <img src="https://loremflickr.com/800/500/coding,programming" alt="A developer coding on a laptop">
         <div class="gallery-caption">
           <span class="cap-title">My Coding Setup</span>
           <span class="cap-tag">Personal</span>
         </div>
-      </div>
+      </a>
 
       <!-- Image 6 -->
-      <div class="gallery-item" id="gitem-6" data-category="personal" onclick="openLightbox('images/books.jpg', 'Philosophy Books')">
-        <img src="images/books.jpg" alt="Philosophy books"
-             onerror="this.style.display='none'; document.getElementById('ph-6').style.display='flex';">
-        <div class="img-placeholder" id="ph-6" style="display:none;">
-          <span class="ph-label">[ books.jpg ]</span>
-        </div>
+      <a class="gallery-item" href="#lb-6" id="gitem-6">
+        <img src="https://loremflickr.com/600/400/books,reading" alt="Philosophy and reading books on a shelf">
         <div class="gallery-caption">
           <span class="cap-title">Philosophy Reading</span>
           <span class="cap-tag">Personal</span>
         </div>
-      </div>
+      </a>
 
       <!-- Image 7 -->
-      <div class="gallery-item" id="gitem-7" data-category="campus" onclick="openLightbox('images/lab.jpg', 'Computer Lab Session')">
-        <img src="images/lab.jpg" alt="Computer lab"
-             onerror="this.style.display='none'; document.getElementById('ph-7').style.display='flex';">
-        <div class="img-placeholder" id="ph-7" style="display:none;">
-          <span class="ph-label">[ lab.jpg ]</span>
-        </div>
+      <a class="gallery-item" href="#lb-7" id="gitem-7">
+        <img src="https://loremflickr.com/600/400/computer,laboratory" alt="Students working in a computer lab">
         <div class="gallery-caption">
           <span class="cap-title">Computer Lab</span>
           <span class="cap-tag">Campus</span>
         </div>
-      </div>
+      </a>
 
     </div><!-- /gallery-grid -->
   </div><!-- /gallery-wrapper -->
 
-  <!-- ══ Lightbox ══ -->
-  <div id="lightbox">
-    <button id="lightbox-close" onclick="closeLightbox()" aria-label="Close lightbox">✕</button>
-    <img id="lightbox-img" src="" alt="Gallery image enlarged">
-    <p id="lightbox-caption"></p>
+  <!-- ══ CSS-only Lightboxes (no JavaScript) ══ -->
+
+  <div id="lb-1" class="lightbox">
+    <a href="#gallery-grid" class="lightbox-bg"></a>
+    <a href="#gallery-grid" class="lightbox-close">✕</a>
+    <img src="https://loremflickr.com/1200/800/tennis,sport" alt="Tennis match enlarged">
+    <p class="lightbox-cap">Campus Tennis Match</p>
+  </div>
+
+  <div id="lb-2" class="lightbox">
+    <a href="#gallery-grid" class="lightbox-bg"></a>
+    <a href="#gallery-grid" class="lightbox-close">✕</a>
+    <img src="https://loremflickr.com/1200/800/cricket,sport" alt="Cricket practice enlarged">
+    <p class="lightbox-cap">Cricket Practice</p>
+  </div>
+
+  <div id="lb-3" class="lightbox">
+    <a href="#gallery-grid" class="lightbox-bg"></a>
+    <a href="#gallery-grid" class="lightbox-close">✕</a>
+    <img src="https://loremflickr.com/1200/800/tabletennis,pingpong" alt="Table tennis tournament enlarged">
+    <p class="lightbox-cap">Table Tennis Tournament</p>
+  </div>
+
+  <div id="lb-4" class="lightbox">
+    <a href="#gallery-grid" class="lightbox-bg"></a>
+    <a href="#gallery-grid" class="lightbox-close">✕</a>
+    <img src="https://loremflickr.com/1200/800/university,campus" alt="University campus enlarged">
+    <p class="lightbox-cap">University Campus</p>
+  </div>
+
+  <div id="lb-5" class="lightbox">
+    <a href="#gallery-grid" class="lightbox-bg"></a>
+    <a href="#gallery-grid" class="lightbox-close">✕</a>
+    <img src="https://loremflickr.com/1200/800/coding,programming" alt="Coding setup enlarged">
+    <p class="lightbox-cap">My Coding Setup</p>
+  </div>
+
+  <div id="lb-6" class="lightbox">
+    <a href="#gallery-grid" class="lightbox-bg"></a>
+    <a href="#gallery-grid" class="lightbox-close">✕</a>
+    <img src="https://loremflickr.com/1200/800/books,reading" alt="Philosophy books enlarged">
+    <p class="lightbox-cap">Philosophy Reading</p>
+  </div>
+
+  <div id="lb-7" class="lightbox">
+    <a href="#gallery-grid" class="lightbox-bg"></a>
+    <a href="#gallery-grid" class="lightbox-close">✕</a>
+    <img src="https://loremflickr.com/1200/800/computer,laboratory" alt="Computer lab enlarged">
+    <p class="lightbox-cap">Computer Lab</p>
   </div>
 
   <!-- ══ Footer ══ -->
   <footer id="site-footer">
     <p>© 2026 &nbsp;<span>Syed Abdul Momin Bukhari</span> &nbsp;·&nbsp; Reg. No. 501993 &nbsp;·&nbsp; SE 15 A</p>
   </footer>
-
-  <script>
-    /* ── Lightbox ── */
-    function openLightbox(src, caption) {
-      var lb = document.getElementById('lightbox');
-      document.getElementById('lightbox-img').src = src;
-      document.getElementById('lightbox-caption').textContent = caption;
-      lb.classList.add('open');
-    }
-
-    function closeLightbox() {
-      document.getElementById('lightbox').classList.remove('open');
-    }
-
-    /* Close on background click */
-    document.getElementById('lightbox').addEventListener('click', function(e) {
-      if (e.target === this) closeLightbox();
-    });
-
-    /* ── Category Filter ── */
-    function filterGallery(category, btn) {
-      /* Update buttons */
-      var buttons = document.querySelectorAll('.filter-btn');
-      for (var i = 0; i < buttons.length; i++) {
-        buttons[i].classList.remove('active');
-      }
-      btn.classList.add('active');
-
-      /* Show / hide items */
-      var items = document.querySelectorAll('.gallery-item');
-      for (var j = 0; j < items.length; j++) {
-        if (category === 'all' || items[j].dataset.category === category) {
-          items[j].style.display = 'block';
-        } else {
-          items[j].style.display = 'none';
-        }
-      }
-    }
-  </script>
 
 </body>
 </html>
